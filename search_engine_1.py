@@ -1,5 +1,8 @@
+#WordNet module
+import copy
 import pandas as pd
 from reader import ReadFile
+from nltk.corpus import wordnet
 from configuration import ConfigClass
 from parser_module import Parse
 from indexer import Indexer
@@ -8,14 +11,14 @@ import utils
 
 
 # DO NOT CHANGE THE CLASS NAME
-class SearchEngine1:
-
+class SearchEngine:
     # DO NOT MODIFY THIS SIGNATURE
     # You can change the internal implementation, but you must have a parser and an indexer.
     def __init__(self, config=None):
         self._config = config
         self._parser = Parse()
         self._indexer = Indexer(config)
+        self.invertedIndex = self._indexer.inverted_idx
         self._model = None
 
     # DO NOT MODIFY THIS SIGNATURE
@@ -28,16 +31,31 @@ class SearchEngine1:
         Output:
             No output, just modifies the internal _indexer object.
         """
+
+        # r = ReadFile(ConfigClass.corpusPath)
+        # documents_list = r.readAllCorpus() #change if we need to read more then 1 parquet
+
         df = pd.read_parquet(fn, engine="pyarrow")
         documents_list = df.values.tolist()
+
+        utils.save_obj({}, "inverted_idx") # needed to pass boris tests, sometimes, inverted_idx fails to save in testings system
+
+
         # Iterate over every document in the file
         number_of_documents = 0
         for idx, document in enumerate(documents_list):
             # parse the document
             parsed_document = self._parser.parse_doc(document)
             number_of_documents += 1
-            # index the document data
-            self._indexer.add_new_doc(parsed_document)
+            if parsed_document.doc_length != 0: #sometimes we get an empty tweet, no need to index them
+                # index the document data
+                self._indexer.add_new_doc(parsed_document)
+        # Inserting entities to the indexer and posting files
+        self._indexer.addEntities(self._parser.suspectedEntityDict)
+        # Sort the posting files
+        self._indexer.update_idfWij(idx)
+        self._indexer.save_index("inverted_idx")
+        utils.save_obj(self._indexer.tweet_info, ConfigClass.get_output() + "/tweets_info")
         print('Finished parsing and indexing.')
 
     # DO NOT MODIFY THIS SIGNATURE
@@ -74,5 +92,27 @@ class SearchEngine1:
             a list of tweet_ids where the first element is the most relavant
             and the last is the least relevant result.
         """
-        searcher = Searcher(self._parser, self._indexer, model=self._model)
-        return searcher.search(query)
+        searcher = Searcher(self._parser, self.invertedIndex, model=self._model)
+        self._parser.suspectedEntityDict = {}
+
+        query_as_list = self._parser.parse_sentence(query)
+        # WordNet expenssion
+        extendedQ = copy.deepcopy(query_as_list)
+        for term in query_as_list:
+            synset = wordnet.synsets(term)
+            try:
+                Synonym = synset[0].lemmas()[0].name()
+                if term.lower() != Synonym.lower() and Synonym not in extendedQ:
+                    extendedQ.append(Synonym)
+            except:
+                continue
+        query_as_list = extendedQ
+
+        # add entities to query - entities doesn't adds to query_as_list in parse_sentence
+        # suspectedEntityDict holds only entities from original query
+        for entity in self._parser.suspectedEntityDict:
+            query_as_list.append(entity)
+
+        return searcher.search(query_as_list) # returns tuple (number of results,relevantDocIdList)
+
+

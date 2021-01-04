@@ -2,7 +2,7 @@ import os
 
 
 class ConfigClass:
-    savedFileMainFolder = 'postings'
+    savedFileMainFolder = ''
     corpusPath = None
     toStem = None
 

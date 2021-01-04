@@ -56,17 +56,9 @@ class Searcher:
     """
     def relevant_docs_from_posting(self, query):
         sorted_l = []
-
-        postFileName_terms_d = {}  # key: Posting file name - Value: [terms]
-
-        termsPostNodesTuple_l = []  # list of tuples: (term, [postingNodes])
-
         if len(query) == 0:  # empty query
             return [], 0
-
-
         relevantDocs_pq = PriorityQueue()
-
         modifiedQuery_l = copy.deepcopy(query)
 
         for term in query:  # cleaning parts of entities from the query if the entity exist in the inverted index
@@ -82,9 +74,6 @@ class Searcher:
                 else:  # unknown entity
                     modifiedQuery_l.remove(term)
         query = modifiedQuery_l
-
-
-
 
         listOfValidTerms = []
         for term in query:  # term can be mix of upper and lower, or one of them. if not term doesn't exist in II
@@ -117,7 +106,6 @@ class Searcher:
                 positiveScore_tweetID_Tuple = (-itemFromPq[0], itemFromPq[1])
                 sorted_l.append(positiveScore_tweetID_Tuple)
             return sorted_l, len(query)
-
 
         # query len > 1
         # first time we init the tweet_SigmaWij_d with values from first list of nodes that we'll unite with others later

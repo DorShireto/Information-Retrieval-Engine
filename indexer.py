@@ -12,52 +12,11 @@ class Indexer:
     # DO NOT MODIFY THIS SIGNATURE
     # You can change the internal implementation as you see fit.
     def __init__(self, config):
-        # PostingDict - key: term value - > [ Posting nodes ]
         self.onlyDigitLettersRegex = re.compile('[A-Za-z0-9]+')
-        # self.cache = {}
         self.inverted_idx = {}
         self.tweet_info = {}
-        # self.posting_dir = ConfigClass.savedFileMainFolder
         self.num_of_docs_indexed = 0
-        # self.docs_indexed_limit = 1000000
         self.counter = 0
-        # self.counterLimit = 3
-        # self.init_postings()
-
-    # def init_postings(self):
-    #     try:
-    #         for i in range(self.counterLimit):
-    #             name = "p" + str(i)
-    #             utils.save_obj({}, self.posting_dir + "/" + name)
-    #             self.cache[name] = {}
-    #     except:
-    #         raise Exception("Error in init_postings")
-
-    # def write_cache_to_disk(self):
-    #     """
-    #     step1: loop over the cache_posting keys:
-    #         step1.1 load the key's posting file
-    #         step1.2:  go over all terms in value of the cache_posting key
-    #                   and check if the term exist in the posting file
-    #         step1.3: if term exist: append the posting nodes to the list (in the posting file)
-    #         step1.4: else: add the term to the posting file with the posting node list
-    #         step1.5: save posting
-    #     step2: jump to step1
-    #     """
-    #     # print("flushing")  # TODO debug
-    #     for postingFileName in self.cache:
-    #         file = utils.load_obj(self.posting_dir + "/" + postingFileName)
-    #         terms_in_cache = self.cache.get(postingFileName)
-    #         for term in terms_in_cache:
-    #             if term in file:
-    #                 for node in terms_in_cache[term]:
-    #                     file.get(term).append(node)
-    #             else:
-    #                 file[term] = terms_in_cache[term]
-    #         utils.save_obj(file, self.posting_dir + "/" + postingFileName)
-    #         # Clear cache
-    #         self.cache[postingFileName] = {}
-
 
     # DO NOT MODIFY THIS SIGNATURE
     # You can change the internal implementation as you see fit.
@@ -72,30 +31,17 @@ class Indexer:
         self.tweet_info[document.tweet_id] = [0, document.max_f, len(document.term_doc_dictionary.keys())]
         documentTerms_d = document.term_doc_dictionary
         for term in documentTerms_d:
-            # if self.num_of_docs_indexed == self.docs_indexed_limit:
-            #     # print("Writing catch to disk - from add new doc")  # TODO debug
-            #     self.write_cache_to_disk()
-            #     self.num_of_docs_indexed = 0
             try:
-
-                # Update inverted index
-                # postingName = "p" + str(self.counter)  # getting the name of the posting file for the term
-                # self.counter += 1
-                # if self.counter >= self.counterLimit:
-                #     self.counter = 0
 
                 if term[0].isupper() and term.lower() in self.inverted_idx:
                     term_tf = document.temrs_tf_dict[term]
                     term = term.lower()
-                    # postingName = self.inverted_idx[term][2]
-
                 elif term[0].islower() and term.upper() in self.inverted_idx:  # term is lower
                     #remove term.upper from inverted index and replace him as lower , but keep the original values.
                     termValuesFromII = copy.deepcopy(self.inverted_idx[term.upper()])
                     del self.inverted_idx[term.upper()]
                     self.inverted_idx[term]=termValuesFromII
                     term_tf = document.temrs_tf_dict[term]
-                    # postingName = self.inverted_idx[term.upper()][2]
                 else:#not appear. the term all UPPER either all LOWER
                     term_tf = document.temrs_tf_dict[term]
 
@@ -104,13 +50,11 @@ class Indexer:
 
                 else:# term already in inverted index
                     self.inverted_idx[term][0] += 1  # update the df of term (df=num of documents term appear in)
-                    # postingName = self.inverted_idx[term][2]
                 termAppearInTweet = term_tf * document.max_f
                 postingNode = PostingNode(document.tweet_id, term_tf, None, termAppearInTweet)
 
                 #insert postingNode to the list in inverted Index:
                 bisect.insort(self.inverted_idx[term][2], postingNode) #sorted insert
-                # self.inverted_idx[term][2].append(postingNode)
             except:
                 print('problem with the following key {}'.format(term), "docNum = ", self.num_of_docs_indexed)
 
@@ -139,22 +83,14 @@ class Indexer:
                     #updating cuz max_f ignored entity count  but we need to check who is bigger ,
                     regular word or entity appear in the same tweet
                     """
-                    # self.tweet_info[tweetID][1]=max(self.tweet_info[tweetID][1],entityNumOfAppearInTweet)#comment above
                     tf = suspectedEntityDict.get(entity).get(tweetID)[0]
                     bisect.insort(nodeList,PostingNode(tweetID, tf, None, entityNumOfAppearInTweet))
-                    # nodeList.append(PostingNode(tweetID, tf, None, entityNumOfAppearInTweet))
 
-                # postingFileName = "p" + str(self.counter)  # getting the name of the posting file for the term
-                # self.counter += 1
-                # if self.counter >= self.counterLimit:
-                #     self.counter = 0
                 try:
                     self.inverted_idx[entity] = [list_of_tweet_ID_len, None, nodeList]# entity never appeared before in inverted index anyways
 
                 except:
                     print("INDEXER.addEntities: problem with Entity: ", entity)
-
-        # self.write_cache_to_disk()
 
     def update_idfWij(self, numOfDocsInCorpus):
         """
@@ -176,49 +112,6 @@ class Indexer:
                     node.Wij = tf * idf #regular weight
                 self.tweet_info.get(node.tweetID)[0] += math.pow(node.Wij, 2) #update Sigma(Wij^2)
 
-
-
-
-        # for counter in range(self.counterLimit):
-        #     fileName = "p" + str(counter)
-        #     file = utils.load_obj(self.posting_dir + "/" + fileName)
-        #     terms_l = list(file.keys())
-        #     while len(terms_l) > 0:
-        #         term = terms_l[0]
-        #         if not self.onlyDigitLettersRegex.fullmatch(term):  # enter only for names
-        #             terms_l.remove(term)
-        #             continue
-        #         if (term[0].islower() and term.upper() in file) or (term[0].isupper() and term.lower() in file):
-        #             postingNodes_l = file[term.upper()]
-        #             if term.lower() != term.upper():
-        #                 for node in postingNodes_l:
-        #                     file[term.lower()].append(node)
-        #             file.pop(term.upper())
-        #             self.inverted_idx.pop(term.upper())
-        #             terms_l.remove(term.lower())
-        #             terms_l.remove(term.upper())
-        #         else:
-        #             terms_l.remove(term)
-        #     modifiedFile = {}
-        #     for term in file:
-        #         nodes_l = file.get(term)
-        #         if len(nodes_l) == 1:
-        #             self.inverted_idx.pop(term)
-        #             continue
-        #         # print("sorting ",fileName , term) #todo DEBUG
-        #         nodes_l.sort()
-        #         modifiedFile[term] = nodes_l
-        #
-        #
-        #
-        #         # updating Wij, idf
-        #
-        #
-        #         for node in nodes_l:
-        #
-        #     utils.save_obj(modifiedFile, self.posting_dir + "/" + fileName)
-
-
     """
     From this part down, we need to implement according to partC
     """
@@ -234,8 +127,6 @@ class Indexer:
         try:
             return utils.load_obj(fn)
         except:
-            # path = self.posting_dir
-            # arr = os.listdir(path)
             raise Exception("INDEXER: file doesn't exist:", fn)
 
     # DO NOT MODIFY THIS SIGNATURE

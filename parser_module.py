@@ -134,7 +134,6 @@ class Parse:
                     else:
                         text_tokens_without_stopwords.append(token.upper())
             counter += 1
-        # ext_tokens_without_stopwords = [w for w in text_tokens if w not in self.stop_words]
         return text_tokens_without_stopwords
 
     def parse_doc(self, doc_as_list):

@@ -24,8 +24,6 @@ class Ranker:
         for numApper_tweetID_tuple in relevant_docs:
             tweetID = numApper_tweetID_tuple[1]
             mone = self.tweet_SigmaWij_d.get(tweetID)[1] * queryWordWeight
-            # mone = self.tweets_info.get(tweetID)[3] * queryWordWeight
-
             mehane = math.sqrt(self.tweets_info.get(tweetID)[0] * (qLen * pow(queryWordWeight, 2)))
             cosSim = mone / mehane
             rank = cosSim * 0.7 + mone * 0.3
@@ -36,23 +34,4 @@ class Ranker:
             sortedTweetID_l.append(relevant_doc_similarity_pq.get()[1])
 
         return sortedTweetID_l
-
-    # def retrieve_top_k(self, sorted_relevant_doc, k=1):
-    #     """
-    #     return a list of top K tweets based on their ranking from highest to lowest
-    #     :param sorted_relevant_doc: list of all candidates docs.
-    #     :param k: Number of top document to return
-    #     :return: list of relevant document
-    #     """
-    #     if len(sorted_relevant_doc) == 0:
-    #         return []
-    #     finalList = []  # list of tuples (rankScore, tweetID)
-    #     i = 0
-    #     while i < k and i <= 2000 and i < len(sorted_relevant_doc):
-    #         tweetID = sorted_relevant_doc[i]
-    #         rankScore = self.tweet_SigmaWij_d.get(tweetID)
-    #         finalList.append((rankScore, tweetID))
-    #         i += 1
-    #
-    #     return finalList
 
