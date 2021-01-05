@@ -62,7 +62,7 @@ if __name__ == '__main__':
 
         # test for each search engine module
         # engine_modules = ['search_engine_' + name for name in ['1', '2', 'best']]#TODO: uncoment. its skelaton part
-        engine_modules = ['search_engine_' + name for name in ['best']]
+        engine_modules = ['search_engine_' + name for name in ['2']]
         for engine_module in engine_modules:
             try:
                 # does the module file exist?
@@ -85,8 +85,8 @@ if __name__ == '__main__':
                 engine.load_precomputed_model()
 
                 # test that we can run one query and get results in the format we expect
-                n_res, res = engine.search('bioweapon')
-                # n_res, res = engine.search("A common cold can cause a positive COVID-19 test. cold can cause positive COVID-19 test")
+                # n_res, res = engine.search('bioweapon')
+                n_res, res = engine.search("warm weather slows covid-19 spread")#TODO scobidobidoooooooooooooooooooooooo
 
                 if n_res is None or res is None or n_res < 1 or len(res) < 1:
                     logging.error('basic query for the word bioweapon returned no results')
@@ -102,7 +102,8 @@ if __name__ == '__main__':
                 if queries is not None:
                     for i, row in queries.iterrows():
                         q_id = row['query_id']
-                        q_keywords = row['keywords']
+                        q_keywords = row['keywords']#TODO scobidobidoooooooooooooooooooooooo
+                        # q_keywords = row['information_need']
                         start_time = time.time()
                         q_n_res, q_res = engine.search(q_keywords)
                         end_time = time.time()

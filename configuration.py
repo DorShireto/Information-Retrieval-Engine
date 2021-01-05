@@ -6,6 +6,18 @@ class ConfigClass:
     corpusPath = None
     toStem = None
 
+    expendedWordWeight = 0.3
+    wordFromOGQueryWeight = 1
+    shortQueryFactor = 1
+    longQueryFactor = 0.5
+    shortQueryLen = 2
+    numOfDocsToRetrieve = 10
+
+    ##### need to sum to 1####
+    cosSinWeight = 0.65
+    innerProductWeight = 1 - cosSinWeight
+    ##########################
+
     @staticmethod
     def set_config(corpus_path, output_path, stemming):
         if output_path is None:
