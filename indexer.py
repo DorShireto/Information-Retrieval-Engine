@@ -142,6 +142,15 @@ class Indexer:
         except:
             raise Exception("INDEXER: Failed to save inverted index")
 
+    def clearInvertedIndex(self, limit):
+
+        keysFromInvertedIndex = list(self.inverted_idx.keys())
+
+        for key in keysFromInvertedIndex:
+            if len(self.inverted_idx[key][2]) <= limit:
+                self.inverted_idx.pop(key)
+
+
 
 
     """

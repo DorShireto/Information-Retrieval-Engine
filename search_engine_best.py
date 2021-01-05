@@ -1,4 +1,5 @@
 import copy
+from nltk.corpus import lin_thesaurus as thesaurus
 
 import pandas as pd
 from reader import ReadFile
@@ -70,7 +71,7 @@ class SearchEngine:
 
     # DO NOT MODIFY THIS SIGNATURE
     # You can change the internal implementation as you see fit.
-    def load_precomputed_model(self):
+    def load_precomputed_model(self, model_dir=None):
         """
         Loads a pre-computed model (or models) so we can answer queries.
         This is where you would load models like word2vec, LSI, LDA, etc. and 
@@ -96,22 +97,35 @@ class SearchEngine:
         self._parser.suspectedEntityDict = {}
 
         query_as_list = self._parser.parse_sentence(query)
+        # add entities to query - entities doesn't adds to query_as_list in parse_sentence
+        # suspectedEntityDict holds only entities from original query
+        for entity in self._parser.suspectedEntityDict:
+            query_as_list.append(entity)
+
+
+
         # WordNet expenssion
         extendedQ = copy.deepcopy(query_as_list)
         for term in query_as_list:
             synset = wordnet.synsets(term)
             try:
-                Synonym = synset[0].lemmas()[0].name()
-                if term.lower() != Synonym.lower() and Synonym not in extendedQ:
-                    extendedQ.append(Synonym)
+                for i in range(2):
+                    Synonym = synset[i].lemmas()[0].name()
+                    if term.lower() != Synonym.lower() and Synonym+"~" not in extendedQ:
+                        Synonym += "~"
+                        extendedQ.append(Synonym)
             except:
                 continue
         query_as_list = extendedQ
 
-        # add entities to query - entities doesn't adds to query_as_list in parse_sentence
-        # suspectedEntityDict holds only entities from original query
-        for entity in self._parser.suspectedEntityDict:
-            query_as_list.append(entity)
+        for word in query_as_list:
+            if word[-1] == '~':
+                break
+            synset = thesaurus.synonyms(word)
+            for i in range(len(synset)):
+                if len(synset[i][1]) > 1 and list(synset[i][1])[0].lower() != term.lower() and list(synset[i][1])[0].lower() + "~" not in extendedQ:
+                    expendedTerm = list(synset[i][1])[0].lower() + "~"
+                    extendedQ.append(expendedTerm)
 
         return searcher.search(query_as_list) # returns tuple (number of results,relevantDocIdList)
 

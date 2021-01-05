@@ -1,6 +1,4 @@
 #Thesaurus module
-
-
 import copy
 import pandas as pd
 from reader import ReadFile
@@ -72,7 +70,7 @@ class SearchEngine:
 
     # DO NOT MODIFY THIS SIGNATURE
     # You can change the internal implementation as you see fit.
-    def load_precomputed_model(self):
+    def load_precomputed_model(self, model_dir=None):
         """
         Loads a pre-computed model (or models) so we can answer queries.
         This is where you would load models like word2vec, LSI, LDA, etc. and
@@ -108,7 +106,7 @@ class SearchEngine:
         for term in query_as_list:
             synset = thesaurus.synonyms(term)
             for i in range(len(synset)):
-                if len(synset[i][1])>1 and list(synset[i][1])[0].lower() != term.lower() and list(synset[i][1])[0].lower()+"~" not in extendedQ:
+                if len(synset[i][1]) > 1 and list(synset[i][1])[0].lower() != term.lower() and list(synset[i][1])[0].lower()+"~" not in extendedQ:
                     expendedTerm = list(synset[i][1])[0].lower()+"~"
                     extendedQ.append(expendedTerm)
 
