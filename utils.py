@@ -1,4 +1,5 @@
 import pickle
+import bz2
 
 
 def save_obj(obj, name):
@@ -8,8 +9,12 @@ def save_obj(obj, name):
     :param name: name of the pickle file.
     :return: -
     """
-    with open(name + '.pkl', 'wb') as f:
-        pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
+    # sfile = bz2.BZ2File('testtest', 'w')
+    with bz2.BZ2File(name+".pkl",'wb') as f:
+    # with open(name + '.pkl', 'wb') as f:
+
+        pickle.dump(obj, f)
+        # pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
 
 
 def load_obj(name):

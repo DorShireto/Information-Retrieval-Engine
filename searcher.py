@@ -180,6 +180,7 @@ class Searcher:
                 factor = ConfigClass.wordFromOGQueryWeight
             unionList = self.UnionLists(unionList, self.inverted_index[term][2],factor)
 
+
         for node in unionList:
             score = self.ranker.tweet_SigmaWij_d[node.tweetID][
                 0]  # num of appear of query word in this specific tweet-node

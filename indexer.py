@@ -48,6 +48,7 @@ class Indexer:
                 if term not in self.inverted_idx:
                     self.inverted_idx[term] = [1, None, []]
 
+
                 else:# term already in inverted index
                     self.inverted_idx[term][0] += 1  # update the df of term (df=num of documents term appear in)
                 termAppearInTweet = term_tf * document.max_f
