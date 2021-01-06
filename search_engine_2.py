@@ -101,6 +101,10 @@ class SearchEngine:
         # suspectedEntityDict holds only entities from original query
         for entity in self._parser.suspectedEntityDict:
             query_as_list.append(entity)
+
+        # Clear query from Entities parts
+        query_as_list = self.clearEntitiesParts(query_as_list)
+
         # Thesaurus expenssion
         extendedQ = copy.deepcopy(query_as_list)
         for term in query_as_list:
@@ -111,6 +115,32 @@ class SearchEngine:
                     extendedQ.append(expendedTerm)
 
         query_as_list = extendedQ
-        return searcher.search(query_as_list)# returns tuple (number of results,relevantDocIdList)
+
+        numberOFresults, relevantDocIdList = searcher.search(query_as_list) # returns tuple (number of results,relevantDocIdList)
+        return numberOFresults, relevantDocIdList
+        # return searcher.search(query_as_list)# returns tuple (number of results,relevantDocIdList)
 
 
+    def clearEntitiesParts(self,query):
+        modifiedQuery_l = copy.deepcopy(query)
+        termsToRemoveFromQuery = []
+        # at this point if query holds Entity, it will hold the terms builds the Entity and the Entity as 1 term
+        # this is why this part below for : ['BILL','Gates','blabla','bla','Bill Gates']
+        # if "Bill Gates" is already known Entity it will leave us with: ['blabla','bla','Bill Gates']
+        for term in query:  # cleaning parts of entities from the query if the entity exist in the inverted index
+            if " " in term:
+                if term in self.invertedIndex:  # entity and in inverted Index
+                    # modifiedQuery_l.append(term)
+                    entity_l = term.split(" ")
+                    for word in entity_l:
+                        try:
+                            termsToRemoveFromQuery.append(word.upper())
+                        except:
+                            termsToRemoveFromQuery.append(word.lower())
+                else:  # unknown entity
+                    modifiedQuery_l.remove(term)
+
+        for word in termsToRemoveFromQuery: #clear all appears of token from modifiedQuery
+            modifiedQuery_l[:] = [x for x in modifiedQuery_l if x != word]
+        query = modifiedQuery_l
+        return query

@@ -1,6 +1,6 @@
+# Best searching engine - WordNet and Spelling Correction
 import copy
-from nltk.corpus import lin_thesaurus as thesaurus
-
+from spellchecker import SpellChecker
 import pandas as pd
 from reader import ReadFile
 from nltk.corpus import wordnet
@@ -102,9 +102,21 @@ class SearchEngine:
         for entity in self._parser.suspectedEntityDict:
             query_as_list.append(entity)
 
+        # Clear query from Entities parts
+        query_as_list = self.clearEntitiesParts(query_as_list)
+        ######################################################################################################
+        #### INIT SPELL CORRECTION, ADD COVID AND FIND UNKNOWN WORDS IN ORIGINAL QUERY - BEFORE EXPENDING ####
+        ######################################################################################################
+        # spell checker part
+        spellFixer = SpellChecker()
+        # add words to known word list
+        spellFixer.word_frequency.load_words(['covid'])
+        # find unknown words - those words will need spell correction
+        missSpell = spellFixer.unknown(query_as_list)
 
-
-        # WordNet expenssion
+        ####################################
+        ######## WordNet expenssion ########
+        ####################################
         extendedQ = copy.deepcopy(query_as_list)
         for term in query_as_list:
             synset = wordnet.synsets(term)
@@ -118,15 +130,44 @@ class SearchEngine:
                 continue
         query_as_list = extendedQ
 
-        for word in query_as_list:
-            if word[-1] == '~':
-                break
-            synset = thesaurus.synonyms(word)
-            for i in range(len(synset)):
-                if len(synset[i][1]) > 1 and list(synset[i][1])[0].lower() != term.lower() and list(synset[i][1])[0].lower() + "~" not in extendedQ:
-                    expendedTerm = list(synset[i][1])[0].lower() + "~"
-                    extendedQ.append(expendedTerm)
+        #####################################
+        ######## Spelling correction ########
+        #####################################
+        # add fixed words
+        fixedQuery = copy.deepcopy(query_as_list)
+        for word in missSpell:
+            candidates = list(spellFixer.candidates(word))
+            for i in range(2):
+                try:
+                    if candidates[i] not in fixedQuery:
+                        fixedQuery.append(candidates[i] + '~')
+                except:
+                    break
 
-        return searcher.search(query_as_list) # returns tuple (number of results,relevantDocIdList)
+        numberOFresults, relevantDocIdList = searcher.search(query_as_list) # returns tuple (numberOFresults,relevantDocIdList)
+        return numberOFresults, relevantDocIdList
 
 
+    def clearEntitiesParts(self,query):
+        modifiedQuery_l = copy.deepcopy(query)
+        termsToRemoveFromQuery = []
+        # at this point if query holds Entity, it will hold the terms builds the Entity and the Entity as 1 term
+        # this is why this part below for : ['BILL','Gates','blabla','bla','Bill Gates']
+        # if "Bill Gates" is already known Entity it will leave us with: ['blabla','bla','Bill Gates']
+        for term in query:  # cleaning parts of entities from the query if the entity exist in the inverted index
+            if " " in term:
+                if term in self.invertedIndex:  # entity and in inverted Index
+                    # modifiedQuery_l.append(term)
+                    entity_l = term.split(" ")
+                    for word in entity_l:
+                        try:
+                            termsToRemoveFromQuery.append(word.upper())
+                        except:
+                            termsToRemoveFromQuery.append(word.lower())
+                else:  # unknown entity
+                    modifiedQuery_l.remove(term)
+
+        for word in termsToRemoveFromQuery: #clear all appears of token from modifiedQuery
+            modifiedQuery_l[:] = [x for x in modifiedQuery_l if x != word]
+        query = modifiedQuery_l
+        return query
