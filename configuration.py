@@ -41,13 +41,13 @@ import os
 #         print('Project was created successfully..')
 
 class ConfigClass:
-    savedFileMainFolder = ''
+    savedFileMainFolder = 'C:\\Users\\liors\\Desktop\\BGU\\year3\\semestrer5\\IR\\SearchEngine_PartC\\code\\Search-Engine-PartC'
     corpusPath = None
     toStem = None
     expendedWordWeight = 0.5
     wordFromOGQueryWeight = 1
     shortQueryFactor = 1
-    longQueryFactor = 0.5
+    longQueryFactor = 0.3
     shortQueryLen = 2
     numOfDocsToRetrieve = 9000
 

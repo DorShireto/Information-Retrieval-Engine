@@ -83,8 +83,8 @@ if __name__ == '__main__':
                 logging.error('model.zip file does not exists.')
 
         # test for each search engine module
-        engine_modules = ['search_engine_' + name for name in ['1', '2', 'best']]
-        # engine_modules = ['search_engine_' + name for name in ['1','2']]#TODO Scobidobidoooooooooooooooooooooooooooooooo
+        # engine_modules = ['search_engine_' + name for name in ['1', '2', 'best']]
+        engine_modules = ['search_engine_' + name for name in ['3']]#TODO Scobidobidoooooooooooooooooooooooooooooooo
 
         for engine_module in engine_modules:
             try:
@@ -110,6 +110,7 @@ if __name__ == '__main__':
 
                 # test that we can run one query and get results in the format we expect
                 n_res, res = engine.search('bioweapon')
+                # n_res, res = engine.search('5G spreads covid-19')#TODO :           skoooooooooooobi
                 if n_res is None or res is None or n_res < 1 or len(res) < 1:
                     logging.error('basic query for the word bioweapon returned no results')
                 else:
