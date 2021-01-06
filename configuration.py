@@ -47,9 +47,9 @@ class ConfigClass:
     expendedWordWeight = 0.5
     wordFromOGQueryWeight = 1
     shortQueryFactor = 1
-    longQueryFactor = 0.5
+    longQueryFactor = 0.334
     shortQueryLen = 2
-    numOfDocsToRetrieve = 9000
+    numOfDocsToRetrieve = 500
 
     ##### need to sum to 1####
     cosSinWeight = 0.7

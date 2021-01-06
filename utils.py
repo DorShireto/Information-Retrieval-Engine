@@ -1,4 +1,5 @@
 import pickle
+import bz2
 
 
 def save_obj(obj, name):
@@ -8,8 +9,11 @@ def save_obj(obj, name):
     :param name: name of the pickle file.
     :return: -
     """
-    with open(name + '.pkl', 'wb') as f:
-        pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
+    with bz2.BZ2File(name+'.pkl', 'wb') as f:
+        pickle.dump(obj, f)
+
+    # with open(name + '.pkl', 'wb') as f:
+    #     pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
 
 
 def load_obj(name):
@@ -19,7 +23,8 @@ def load_obj(name):
     :return: loaded pickle file
     """
     try:
-        with open(name + '.pkl', 'rb') as f:
+        with bz2.BZ2File(name + '.pkl', 'rb') as f:
+        # with open(name + '.pkl', 'rb') as f:
             return pickle.load(f)
     except:
         raise Exception("load_obj in utils")
