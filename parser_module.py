@@ -142,7 +142,9 @@ class Parse:
         :param doc_as_list: list re-preseting the tweet.
         :return: Document object with corresponding fields.
         """
-        tweet_id = int(doc_as_list[0])
+        # tweet_id = int(doc_as_list[0])
+        tweet_id = doc_as_list[0]
+
         tweet_date = doc_as_list[1]
         full_text = doc_as_list[2]
         urls = doc_as_list[3]
