@@ -33,7 +33,9 @@ if __name__ == '__main__':
         return False
 
 
-    bench_data_path = os.path.join('data', 'benchmark_data_train.snappy.parquet')
+    bench_data_path = os.path.join('data', 'benchmark_data_train.snappy.parquet') #TODO SCOOOOOOO
+    # bench_data_path = os.path.join('', 'testtest.parquet')
+
     bench_lbls_path = os.path.join('data', 'benchmark_lbls_train.csv')
     queries_path = os.path.join('data', 'queries_train.tsv')
     model_dir = os.path.join('.', 'model')
@@ -83,8 +85,8 @@ if __name__ == '__main__':
                 logging.error('model.zip file does not exists.')
 
         # test for each search engine module
-        # engine_modules = ['search_engine_' + name for name in ['1', '2', 'best']]
-        engine_modules = ['search_engine_' + name for name in ['3']]#TODO Scobidobidoooooooooooooooooooooooooooooooo
+        # engine_modules = ['search_engine_' + name for name in ['1', '2','3', 'best']]
+        engine_modules = ['search_engine_' + name for name in ['2']]#TODO Scobidobidoooooooooooooooooooooooooooooooo
 
         for engine_module in engine_modules:
             try:
@@ -109,8 +111,8 @@ if __name__ == '__main__':
                 engine.load_precomputed_model(model_dir)
 
                 # test that we can run one query and get results in the format we expect
-                n_res, res = engine.search('bioweapon')
-                # n_res, res = engine.search('5G spreads covid-19')#TODO :           skoooooooooooobi
+                # n_res, res = engine.search('bioweapon')#TODO SCOBIBIBIBIIDIDIDIDIDODODODODODO
+                n_res, res = engine.search('gates implant microchips')
                 if n_res is None or res is None or n_res < 1 or len(res) < 1:
                     logging.error('basic query for the word bioweapon returned no results')
                 else:
@@ -127,6 +129,8 @@ if __name__ == '__main__':
                         q_id = row['query_id']
                         q_keywords = row['keywords']
                         start_time = time.time()
+                        if q_id == 2:
+                            print("g")
                         q_n_res, q_res = engine.search(q_keywords)
                         end_time = time.time()
                         q_time = end_time - start_time

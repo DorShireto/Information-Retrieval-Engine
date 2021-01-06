@@ -49,7 +49,7 @@ class ConfigClass:
     shortQueryFactor = 1
     longQueryFactor = 0.3
     shortQueryLen = 2
-    numOfDocsToRetrieve = 9000
+    numOfDocsToRetrieve = 20000
 
     ##### need to sum to 1####
     cosSinWeight = 0.7

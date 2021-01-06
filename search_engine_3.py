@@ -1,7 +1,5 @@
 #spelling correction method
-
 from spellchecker import SpellChecker
-
 import copy
 import pandas as pd
 from reader import ReadFile
@@ -10,6 +8,7 @@ from parser_module import Parse
 from indexer import Indexer
 from searcher import Searcher
 import utils
+import re
 
 
 # DO NOT CHANGE THE CLASS NAME
@@ -22,6 +21,7 @@ class SearchEngine:
         self._indexer = Indexer(config)
         self.invertedIndex = self._indexer.inverted_idx
         self._model = None
+        self.charRegex = re.compile('[a-zA-Z]+')
 
     # DO NOT MODIFY THIS SIGNATURE
     # You can change the internal implementation as you see fit.
@@ -104,17 +104,50 @@ class SearchEngine:
         for entity in self._parser.suspectedEntityDict:
             query_as_list.append(entity)
 
+        # Clear query from Entities parts
+        query_as_list = self.clearEntitiesParts(query_as_list)
+
         # spell checker part
         spellFixer = SpellChecker()
+        # add words to known word list
+        spellFixer.word_frequency.load_words(['covid'])
+        # find unknown words - those words will need spell correction
+        missSpell = spellFixer.unknown(query_as_list)
+        # add fixed words
         fixedQuery = copy.deepcopy(query_as_list)
-        for word in query_as_list:
+        for word in missSpell:
             candidates = list(spellFixer.candidates(word))
             for i in range(2):
                 try:
                     if candidates[i] not in fixedQuery:
                         fixedQuery.append(candidates[i]+'~')
                 except:
-                    break;
-        return searcher.search(fixedQuery) # returns tuple (number of results,relevantDocIdList)
+                    break
+        numberOFresults, relevantDocIdList = searcher.search(fixedQuery) # returns tuple (number of results,relevantDocIdList)
+        return numberOFresults, relevantDocIdList
+        # return searcher.search(fixedQuery) # returns tuple (number of results,relevantDocIdList)
 
 
+    def clearEntitiesParts(self,query):
+        modifiedQuery_l = copy.deepcopy(query)
+        termsToRemoveFromQuery = []
+        # at this point if query holds Entity, it will hold the terms builds the Entity and the Entity as 1 term
+        # this is why this part below for : ['BILL','Gates','blabla','bla','Bill Gates']
+        # if "Bill Gates" is already known Entity it will leave us with: ['blabla','bla','Bill Gates']
+        for term in query:  # cleaning parts of entities from the query if the entity exist in the inverted index
+            if " " in term:
+                if term in self.invertedIndex:  # entity and in inverted Index
+                    # modifiedQuery_l.append(term)
+                    entity_l = term.split(" ")
+                    for word in entity_l:
+                        try:
+                            termsToRemoveFromQuery.append(word.upper())
+                        except:
+                            termsToRemoveFromQuery.append(word.lower())
+                else:  # unknown entity
+                    modifiedQuery_l.remove(term)
+
+        for word in termsToRemoveFromQuery: #clear all appears of token from modifiedQuery
+            modifiedQuery_l[:] = [x for x in modifiedQuery_l if x != word]
+        query = modifiedQuery_l
+        return query
