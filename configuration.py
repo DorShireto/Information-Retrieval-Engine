@@ -41,7 +41,7 @@ import os
 #         print('Project was created successfully..')
 
 class ConfigClass:
-    savedFileMainFolder = ''
+    savedFileMainFolder = 'C:\\Users\\liors\\Desktop\\BGU\\year3\\semestrer5\\IR\\SearchEngine_PartC\\code\\Search-Engine-PartC'
     corpusPath = None
     toStem = None
     expendedWordWeight = 0.5
