@@ -1,7 +1,6 @@
 import pandas as pd
 from functools import reduce
 
-
 # precision(df, True, 1) == 0.5
 # precision(df, False, None) == 0.5
 def precision(df, single=False, query_number=None):
@@ -14,6 +13,8 @@ def precision(df, single=False, query_number=None):
     """
     if single:
         df2 = df[df['query'] == query_number]
+        # print("Query: ", query_number, " Precision: ",df2['y_true'].mean())
+        # print(df2['y_true'].mean())
         return df2['y_true'].mean()
     else:
         return df.groupby('query')['y_true'].mean().mean()
@@ -27,8 +28,11 @@ def recall_single(df, num_of_relevant, query_number):
         :param query_number: Integer/None that tell on what query_number to evaluate precision or None for the entire DataFrame
         :return: Double - The recall
     """
+
     df2 = df[df['query'] == query_number]
-    return df2['y_true'].sum() / num_of_relevant
+    recall = df2['y_true'].sum() / num_of_relevant
+    # print(recall)
+    return recall
 
 
 # recall(df, {1:2}, True) == 0.5
@@ -57,6 +61,10 @@ def precision_at_n(df, query_number=1, n=5):
         :param n: Total document to splice from the df
         :return: Double: The precision of those n documents
     """
+    # for i in range(1,36):
+    #     precision(df[df['query'] == i][:n], True, i)
+    #     # print("Precision at ",n , " is:",precision(df[df['query'] == i][:n], True, i))
+    # pres = precision(df[df['query'] == query_number][:n], True, query_number)
     return precision(df[df['query'] == query_number][:n], True, query_number)
 
 

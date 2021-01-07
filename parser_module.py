@@ -142,12 +142,12 @@ class Parse:
         :param doc_as_list: list re-preseting the tweet.
         :return: Document object with corresponding fields.
         """
-        tweet_id = int(doc_as_list[0])
+        tweet_id = doc_as_list[0]
         tweet_date = doc_as_list[1]
         full_text = doc_as_list[2]
         urls = doc_as_list[3]
         urls = urls.replace("null", "None")
-        # if tweet_id == '1288852665171095557':
+        # if tweet_id == '1291335639544336384':
         #      print('ghost')
 
         indices = doc_as_list[4]

@@ -55,7 +55,7 @@ class SearchEngine:
         # Sort the posting files
         self._indexer.update_idfWij(idx)
         self._indexer.save_index("inverted_idx")
-        utils.save_obj(self._indexer.tweet_info, ConfigClass.get_output() + "/tweets_info")
+        # utils.save_obj(self._indexer.tweet_info, ConfigClass.get_output() + "/tweets_info") #TODO ghost
         print('Finished parsing and indexing.')
 
     # DO NOT MODIFY THIS SIGNATURE
@@ -93,7 +93,8 @@ class SearchEngine:
             a list of tweet_ids where the first element is the most relavant
             and the last is the least relevant result.
         """
-        searcher = Searcher(self._parser, self.invertedIndex, model=self._model)
+        searcher = Searcher(self._parser, self._indexer, model=self._model)
+        # searcher = Searcher(self._parser, self.invertedIndex, model=self._model) #TODO ghost
         self._parser.suspectedEntityDict = {}
 
         query_as_list = self._parser.parse_sentence(query)

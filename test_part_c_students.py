@@ -85,8 +85,8 @@ if __name__ == '__main__':
                 logging.error('model.zip file does not exists.')
 
         # test for each search engine module
-        # engine_modules = ['search_engine_' + name for name in ['1', '2','3', 'best']]
-        engine_modules = ['search_engine_' + name for name in ['2']]#TODO Scobidobidoooooooooooooooooooooooooooooooo
+        engine_modules = ['search_engine_' + name for name in ['1', '2','3', 'best']]
+        # engine_modules = ['search_engine_' + name for name in ['best']]#TODO Scobidobidoooooooooooooooooooooooooooooooo
 
         for engine_module in engine_modules:
             try:
@@ -111,8 +111,8 @@ if __name__ == '__main__':
                 engine.load_precomputed_model(model_dir)
 
                 # test that we can run one query and get results in the format we expect
-                # n_res, res = engine.search('bioweapon')#TODO SCOBIBIBIBIIDIDIDIDIDODODODODODO
-                n_res, res = engine.search('gates implant microchips')
+                n_res, res = engine.search('bioweapon')#TODO SCOBIBIBIBIIDIDIDIDIDODODODODODO
+                # n_res, res = engine.search('flu kills more than covid')
                 if n_res is None or res is None or n_res < 1 or len(res) < 1:
                     logging.error('basic query for the word bioweapon returned no results')
                 else:
@@ -128,9 +128,8 @@ if __name__ == '__main__':
                     for i, row in queries.iterrows():
                         q_id = row['query_id']
                         q_keywords = row['keywords']
+                        # q_keywords = row['information_need']
                         start_time = time.time()
-                        if q_id == 2:
-                            print("g")
                         q_n_res, q_res = engine.search(q_keywords)
                         end_time = time.time()
                         q_time = end_time - start_time
@@ -177,6 +176,18 @@ if __name__ == '__main__':
                         metrics.precision(q_results_labeled.groupby('query').head(10)), \
                         metrics.precision(q_results_labeled.groupby('query').head(50)), \
                         metrics.recall(q_results_labeled, q2n_relevant)
+                    # print("Precision at 5")
+                    # print("*"*50)
+                    # for i in range(1,36):
+                    #     print(metrics.precision(q_results_labeled,True,i))
+                    # metrics.precision_at_n(q_results_labeled, 1, 5)
+                    # print("Precision at 10")
+                    # print("*" * 50)
+                    # metrics.precision_at_n(q_results_labeled, 1, 10)
+                    # print("Precision at 50")
+                    # print("*" * 50)
+                    # metrics.precision_at_n(q_results_labeled, 1, 50)
+                    #
                     logging.debug(f"{engine_module} results produced average precision of {prec}.")
                     logging.debug(f"{engine_module} results produced average precision@5 of {p5}.")
                     logging.debug(f"{engine_module} results produced average precision@10 of {p10}.")

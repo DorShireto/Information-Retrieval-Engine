@@ -124,6 +124,8 @@ class Indexer:
         Input:
             fn - file name of pickled index.
         """
+        if fn[-4:] == ".pkl":
+            fn = fn.replace(".pkl","")
         try:
             return utils.load_obj(fn)
         except:

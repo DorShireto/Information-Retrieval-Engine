@@ -7,8 +7,11 @@ from configuration import ConfigClass
 
 
 class Ranker:
-    def __init__(self):
-        self.tweets_info = utils.load_obj(ConfigClass.get_output()+"/tweets_info")
+    # def __init__(self):  #TODO ghost
+    def __init__(self,tweets_info):
+        # self.tweets_info = utils.load_obj(ConfigClass.get_output()+"/tweets_info") #TODO ghost
+        self.tweets_info = tweets_info
+
         self.tweet_SigmaWij_d = {}  # key: tweetID -> value: [number of the query words showed in tweet,Sum(Wij)]
 
     def rank_relevant_docs(self, relevant_docs, query_as_list):

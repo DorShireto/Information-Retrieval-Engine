@@ -19,8 +19,8 @@ class Searcher:
     def __init__(self, parser, indexer, model=None):
         # self._model = model
         self.parser = parser
-        self.ranker = Ranker()
-        self.inverted_index = indexer
+        self.ranker = Ranker(indexer.tweet_info)
+        self.inverted_index = indexer.inverted_idx
         self.firstUnion = True
         self.posting_dir = ConfigClass.get_output()
         # self.DocsToRetrieve = 2000
