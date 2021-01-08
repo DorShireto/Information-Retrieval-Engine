@@ -98,7 +98,7 @@ class Searcher:
                 word = query[i]
             except:
                 break
-        if notExpendedQueryLen >= ConfigClass.shortQueryLen: #long query
+        if notExpendedQueryLen > ConfigClass.shortQueryLen: #long query
             self.scoreLowerBoundFactor = ConfigClass.longQueryFactor
         else:
             self.scoreLowerBoundFactor = ConfigClass.shortQueryFactor
