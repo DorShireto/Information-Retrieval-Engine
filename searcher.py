@@ -23,7 +23,6 @@ class Searcher:
         self.inverted_index = indexer.inverted_idx
         self.firstUnion = True
         self.posting_dir = ConfigClass.get_output()
-        # self.DocsToRetrieve = 2000
         self.DocsToRetrieve = ConfigClass.numOfDocsToRetrieve
         self.scoreLowerBoundFactor = 0.5
 
@@ -192,8 +191,6 @@ class Searcher:
         while len(sorted_l) < self.DocsToRetrieve and relevantDocs_pq.qsize() > 0:
         # while relevantDocs_pq.qsize() > 0:
             itemFromPq = relevantDocs_pq.get()
-            # if len(sorted_l) == 0:#TODO Debug
-            # print("Score: ", -itemFromPq[0], "  TweetID: ", itemFromPq[1])#TODO Debug
             positiveScore_tweetID_Tuple = (-itemFromPq[0], itemFromPq[1])
             sorted_l.append(positiveScore_tweetID_Tuple)
         return sorted_l, len(query)

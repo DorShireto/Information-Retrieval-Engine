@@ -13,8 +13,7 @@ class ParserWithStemmer(Parse):
         :param text:
         :return:
         """
-        # TODO: here we'll add more cleaning options to the tokenizer
-        # text_tokens = word_tokenize(text)
+
         # Pre Processes for covid rule
 
         fullText = re.split(' |, ', text)

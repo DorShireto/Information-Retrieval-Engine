@@ -64,8 +64,6 @@ class Parse:
                :return:
                """
 
-        # TODO: here we'll add more cleaning options to the tokenizer
-        # text_tokens = word_tokenize(text)
         # Pre Processes for covid rule
         fullText = re.split(' |, ', text)#add delimiters by using | follow by delimiter
         modif_text = ""
@@ -147,9 +145,6 @@ class Parse:
         full_text = doc_as_list[2]
         urls = doc_as_list[3]
         urls = urls.replace("null", "None")
-        # if tweet_id == '1291335639544336384':
-        #      print('ghost')
-
         indices = doc_as_list[4]
         retweet_text = doc_as_list[5]
         retweet_url = doc_as_list[6]
@@ -160,7 +155,6 @@ class Parse:
         retweet_quote_text = doc_as_list[11]
         retweet_quote_urls = doc_as_list[12]
         retweet_quote_indices = doc_as_list[13]
-        # 11593
         # checking if tweet inculding urls - if so swap short url with full url
         term_tf_dict = {}  # key: term, value: calculated tf
         term_dict = {}

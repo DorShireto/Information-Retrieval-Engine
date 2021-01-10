@@ -25,7 +25,6 @@ class ReadFile:
     def readAllCorpus(self):
 
         df = []
-        # TODO: might need to find a faster way then os.walk https://stackoverflow.com/questions/32455262/os-walk-very-slow-any-way-to-optimise
         for dirPath, dirNames, fileNames in os.walk(self.corpus_path):
             for file in fileNames:
                 if not file.endswith('.parquet'):

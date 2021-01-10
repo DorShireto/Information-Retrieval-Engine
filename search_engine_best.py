@@ -56,7 +56,6 @@ class SearchEngine:
         # Sort the posting files
         self._indexer.update_idfWij(idx)
         self._indexer.save_index("inverted_idx")
-        # utils.save_obj(self._indexer.tweet_info, ConfigClass.get_output() + "/tweets_info") #TODO ghost
         print('Finished parsing and indexing.')
 
     # DO NOT MODIFY THIS SIGNATURE

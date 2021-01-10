@@ -112,7 +112,7 @@ if __name__ == '__main__':
 
                 # test that we can run one query and get results in the format we expect
                 n_res, res = engine.search('bioweapon')#TODO SCOBIBIBIBIIDIDIDIDIDODODODODODO
-                # n_res, res = engine.search('flu kills more than covid')
+                # n_res, res = engine.search('Playstation 4')
                 if n_res is None or res is None or n_res < 1 or len(res) < 1:
                     logging.error('basic query for the word bioweapon returned no results')
                 else:
