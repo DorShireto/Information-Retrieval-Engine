@@ -20,6 +20,7 @@ The search engine is using PyPI SpellChecker and Levenshtein Distance to find an
 You are all welcome to visit our search engine website that we've created.
 
 http://client-search-engine.s3-website.us-east-2.amazonaws.com/
+* In case of any issues with the website please feel free to send us an email. 
 
 And here are some videos and pictures of our search engine, showing the work from within PyCharm IDE and from out website.
 
