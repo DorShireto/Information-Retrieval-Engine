@@ -1,4 +1,5 @@
 Hello and welcome to our tweet-based search engine. 
+
 This project was created as a final project for the Information Retrieval course and focused on retrieving covid related tweets.
 
 This search engine built with Python, using open source tools such as NLTK. https://www.nltk.org/
