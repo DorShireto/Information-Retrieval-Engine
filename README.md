@@ -20,4 +20,9 @@ You are all welcome to visit our search engine website that we've created.
 
 http://client-search-engine.s3-website.us-east-2.amazonaws.com/
 
+![AvgOfEngines](https://user-images.githubusercontent.com/45013022/109036317-2754a300-76d2-11eb-8669-be6f95e891a2.png)
+
+
+And here are some videos of our search engine, showing the work from within PyCharm IDE and from out website.
+
 
