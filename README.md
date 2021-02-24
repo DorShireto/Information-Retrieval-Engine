@@ -25,4 +25,5 @@ http://client-search-engine.s3-website.us-east-2.amazonaws.com/
 
 And here are some videos of our search engine, showing the work from within PyCharm IDE and from out website.
 
+https://user-images.githubusercontent.com/45013022/109036768-9d590a00-76d2-11eb-919f-68c3b1eadeb3.mp4
 
