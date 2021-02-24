@@ -21,10 +21,15 @@ You are all welcome to visit our search engine website that we've created.
 
 http://client-search-engine.s3-website.us-east-2.amazonaws.com/
 
-![AvgOfEngines](https://user-images.githubusercontent.com/45013022/109036317-2754a300-76d2-11eb-8669-be6f95e891a2.png)
-
-
-And here are some videos of our search engine, showing the work from within PyCharm IDE and from out website.
+And here are some videos and pictures of our search engine, showing the work from within PyCharm IDE and from out website.
 
 https://user-images.githubusercontent.com/45013022/109036768-9d590a00-76d2-11eb-919f-68c3b1eadeb3.mp4
+
+![Website](https://user-images.githubusercontent.com/45013022/109038531-7e5b7780-76d4-11eb-9480-ad690d8fc579.png)
+
+![Search](https://user-images.githubusercontent.com/45013022/109038527-7d2a4a80-76d4-11eb-88c9-0536996d6784.png)
+
+![SearchAnswer](https://user-images.githubusercontent.com/45013022/109038520-7bf91d80-76d4-11eb-8a68-fb7d02ccc9a6.jpg)
+
+
 
